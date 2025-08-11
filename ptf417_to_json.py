@@ -3,12 +3,12 @@
 """
 ptf417_to_json.py
 
-Single-entry Python program to parse a combined schema text file (PTF-417.TXT)
-that contains both EDI schema (X12 824) and XML schema DSL blocks, and generate
+Single-entry Python program to parse a combined schema text file (PTF-*.TXT)
+that contains both EDI schema and XML schema DSL blocks, and generate
 edi.json and xml.json matching the existing structure in this workspace.
 
-If the PTF file is not available, the script can fall back to reading
-`ediSchema.txt` and `xmlSchema.txt` directly.
+If no PTF .txt file is found in the given input directory, the program exits
+with an error and does not fall back to any other files.
 
 Usage examples:
   - Default (auto-detect inputs, write to edi.json and xml.json):
@@ -491,33 +491,24 @@ class XmlSchemaParser:
 ################################################################################
 
 class PtfOrchestrator:
-    def __init__(self, ptf_path: Optional[str], edi_schema_path: Optional[str], xml_schema_path: Optional[str]) -> None:
+    def __init__(self, ptf_path: Optional[str]) -> None:
         self.ptf_path = ptf_path
-        self.edi_schema_path = edi_schema_path
-        self.xml_schema_path = xml_schema_path
 
     def load_sources(self) -> Tuple[str, str]:
-        # If PTF exists, split into EDI and XML regions by simple heuristics; else use separate files
-        if self.ptf_path and os.path.exists(self.ptf_path):
-            ptf = read_text_file(self.ptf_path)
-            # Heuristic split: EDI DSL contains 'def derivedMessage' and 'def segment',
-            # XML DSL section contained within backticks following 'schemaInput'
-            # Extract XML DSL block if present
-            xml_part = ''
-            mxml = re.search(r"schemaInput\s*=\s*`([\s\S]*?)`;", ptf)
-            if mxml:
-                xml_part = mxml.group(1)
-            # Remove XML part from EDI text to avoid confusing the EDI parser
-            edi_part = ptf
-            if xml_part:
-                edi_part = ptf.replace(xml_part, '')
-            return edi_part, xml_part
-        # Fallback
-        if not self.edi_schema_path or not os.path.exists(self.edi_schema_path):
-            raise FileNotFoundError("EDI schema source not found. Provide --ptf or --edi-schema.")
-        if not self.xml_schema_path or not os.path.exists(self.xml_schema_path):
-            raise FileNotFoundError("XML schema source not found. Provide --ptf or --xml-schema.")
-        return read_text_file(self.edi_schema_path), read_text_file(self.xml_schema_path)
+        # Require a PTF .txt file
+        if not self.ptf_path or not os.path.exists(self.ptf_path):
+            raise FileNotFoundError("No PTF .txt file found. Provide --ptf or --input-dir with a .txt file.")
+        ptf = read_text_file(self.ptf_path)
+        # Extract XML DSL block if present
+        xml_part = ''
+        mxml = re.search(r"schemaInput\s*=\s*`([\s\S]*?)`;", ptf)
+        if mxml:
+            xml_part = mxml.group(1)
+        # Remove XML part from EDI text to avoid confusing the EDI parser
+        edi_part = ptf
+        if xml_part:
+            edi_part = ptf.replace(xml_part, '')
+        return edi_part, xml_part
 
 
 ################################################################################
@@ -528,8 +519,6 @@ def main(argv: Optional[List[str]] = None) -> int:
     parser = argparse.ArgumentParser(description="Parse PTF-*.TXT (417 or other) or separate schemas to generate edi.json and xml.json in the input folder")
     parser.add_argument('--ptf', dest='ptf', default=None, help='Path to combined PTF .TXT containing both EDI and XML schema')
     parser.add_argument('--input-dir', dest='input_dir', default=None, help='Directory to auto-detect a single .txt input file (defaults to CWD)')
-    parser.add_argument('--edi-schema', dest='edi_schema', default='/workspace/ediSchema.txt', help='Path to EDI schema DSL file (fallback)')
-    parser.add_argument('--xml-schema', dest='xml_schema', default='/workspace/xmlSchema.txt', help='Path to XML schema DSL file (fallback)')
     parser.add_argument('--out-edi', dest='out_edi', default=None, help='Optional explicit output path for EDI JSON (overrides same-folder rule)')
     parser.add_argument('--out-xml', dest='out_xml', default=None, help='Optional explicit output path for XML JSON (overrides same-folder rule)')
 
@@ -551,7 +540,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         if out_xml is None:
             out_xml = os.path.join(base_dir, 'xml.json')
 
-    orchestrator = PtfOrchestrator(ptf_path, args.edi_schema, args.xml_schema)
+    orchestrator = PtfOrchestrator(ptf_path)
     edi_text, xml_text = orchestrator.load_sources()
 
     # EDI parse and render

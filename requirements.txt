@@ -1,0 +1,4 @@
+# Minimal requirements for ptf417_to_json.py
+# Standard library only; no third-party dependencies required.
+# If you plan to run under specific Python versions, pin here:
+# python_version >= "3.8"
