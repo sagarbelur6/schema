@@ -1,0 +1,303 @@
+{
+  "LIST": {
+    "ControlSegment": {
+      "_BUSINESSID": "",
+      "_BUSINESSQUALIFIER": "",
+      "_CLIENT": "",
+      "_CONTROLTEXT1": "",
+      "_CONTROLTEXT2": "",
+      "_CONTROLTEXT3": "",
+      "_DIRECTION": "",
+      "_DOCUMENTSTATUS": "",
+      "_EDIMESSAGECODE": "",
+      "_EDIMESSAGEFUNCTION": "",
+      "_EDIMESSAGETYPE": "",
+      "_EDITXM": "",
+      "_EDIVERSION": "",
+      "_GSCONTROLNUMBER": "",
+      "_ISACONTROLNUMBER": "",
+      "_PARTNERTYPE": "",
+      "_PAYLOADFIELDNAME": "",
+      "_RECEIVERID": "",
+      "_RECEIVERQUALIFIER": "",
+      "_SECONDARYBUSINESSID": "",
+      "_SECONDARYBUSINESSQUALIFIER": "",
+      "_SENDERID": "",
+      "_SENDERQUALIFIER": "",
+      "_SOURCEDATETIME": "",
+      "_SYSTEMDATETIME": "",
+      "_TABLENAME": "",
+      "_TESTINDICATOR": ""
+    },
+    "ISA": {
+      "_acknowledgmentRequested": "",
+      "_authorizationInformation": "",
+      "_authorizationInformationQualifier": "",
+      "_componentElementSeparator": "",
+      "_interchangeControlNumber": "",
+      "_interchangeControlVersionNumber": "",
+      "_interchangeDate": "",
+      "_interchangeIDQualifier": "",
+      "_interchangeIDQualifier2": "",
+      "_interchangeReceiverID": "",
+      "_interchangeSenderID": "",
+      "_interchangeTime": "",
+      "_interchangeUsageIndicator": "",
+      "_repetitionSeparator": "",
+      "_securityInformation": "",
+      "_securityInformationQualifier": "",
+      "GS__loop": {
+        "_applicationReceiversCode": "",
+        "_applicationSendersCode": "",
+        "_date": "",
+        "_functionalIdentifierCode": "",
+        "_groupControlNumber": "",
+        "_responsibleAgencyCode": "",
+        "_time": "",
+        "_versionReleaseIndustryIdentifierCode": "",
+        "ST__loop": {
+          "_implementationConventionReference": "",
+          "_transactionSetControlNumber": "",
+          "_transactionSetIdentifierCode": "",
+          "BGN": {
+            "_actionCode": "",
+            "_date": "",
+            "_referenceIdentification": "",
+            "_referenceIdentification2": "",
+            "_securityLevelCode": "",
+            "_time": "",
+            "_timeCode": "",
+            "_transactionSetPurposeCode": "",
+            "_transactionTypeCode": ""
+          },
+          "loopN1__loop": {
+            "N1": {
+              "_entityIdentifierCode": "",
+              "_entityIdentifierCode2": "",
+              "_entityRelationshipCode": "",
+              "_identificationCode": "",
+              "_identificationCodeQualifier": "",
+              "_name": "",
+              "N2__loop": {
+                "_name": "",
+                "_name2": ""
+              },
+              "N3__loop": {
+                "_addressInformation": "",
+                "_addressInformation2": ""
+              },
+              "N4": {
+                "_cityName": "",
+                "_countryCode": "",
+                "_countrySubdivisionCode": "",
+                "_locationIdentifier": "",
+                "_locationQualifier": "",
+                "_postalCode": "",
+                "_stateorProvinceCode": ""
+              },
+              "PER__loop": {
+                "_communicationNumber": "",
+                "_communicationNumber2": "",
+                "_communicationNumber3": "",
+                "_communicationNumberQualifier": "",
+                "_communicationNumberQualifier2": "",
+                "_communicationNumberQualifier3": "",
+                "_contactFunctionCode": "",
+                "_contactInquiryReference": "",
+                "_name": ""
+              },
+              "REF__loop": {
+                "_description": "",
+                "_referenceIdentification": "",
+                "_referenceIdentificationQualifier": "",
+                "C040": {
+                  "_referenceIdentification": "",
+                  "_referenceIdentification2": "",
+                  "_referenceIdentification3": "",
+                  "_referenceIdentificationQualifier": "",
+                  "_referenceIdentificationQualifier2": "",
+                  "_referenceIdentificationQualifier3": ""
+                }
+              }
+            }
+          },
+          "loopOTI__loop": {
+            "OTI": {
+              "_actionCode": "",
+              "_applicationAcknowledgmentCode": "",
+              "_applicationReceiversCode": "",
+              "_applicationSendersCode": "",
+              "_applicationType": "",
+              "_date": "",
+              "_groupControlNumber": "",
+              "_referenceIdentification": "",
+              "_referenceIdentificationQualifier": "",
+              "_statusReasonCode": "",
+              "_time": "",
+              "_transactionHandlingCode": "",
+              "_transactionSetControlNumber": "",
+              "_transactionSetIdentifierCode": "",
+              "_transactionSetPurposeCode": "",
+              "_transactionTypeCode": "",
+              "_versionReleaseIndustryIdentifierCode": "",
+              "AMT__loop": {
+                "_amountQualifierCode": "",
+                "_creditDebitFlagCode": "",
+                "_monetaryAmount": ""
+              },
+              "DTM__loop": {
+                "_date": "",
+                "_dateTimePeriod": "",
+                "_dateTimePeriodFormatQualifier": "",
+                "_dateTimeQualifier": "",
+                "_time": "",
+                "_timeCode": ""
+              },
+              "loopLM__loop": {
+                "LM": {
+                  "_agencyQualifierCode": "",
+                  "_sourceSubqualifier": "",
+                  "loopLQ__loop": {
+                    "LQ": {
+                      "_codeListQualifierCode": "",
+                      "_industryCode": "",
+                      "RED__loop": {
+                        "_agencyQualifierCode": "",
+                        "_codeListQualifierCode": "",
+                        "_description": "",
+                        "_industryCode": "",
+                        "_relatedDataIdentificationCode": "",
+                        "_sourceSubqualifier": ""
+                      }
+                    }
+                  }
+                }
+              },
+              "loopTED__loop": {
+                "TED": {
+                  "_applicationErrorConditionCode": "",
+                  "_copyofBadDataElement": "",
+                  "_dataElementNewContent": "",
+                  "_freeformMessage": "",
+                  "_segmentIDCode": "",
+                  "_segmentPositioninTransactionSet": "",
+                  "C030": {
+                    "_componentDataElementPositioninComposite": "",
+                    "_elementPositioninSegment": "",
+                    "_repeatingDataElementPosition": ""
+                  },
+                  "C999": {
+                    "_dataElementReferenceNumber": "",
+                    "_dataElementReferenceNumber2": ""
+                  },
+                  "CTX__loop": {
+                    "_loopIdentifierCode": "",
+                    "_segmentIDCode": "",
+                    "_segmentPositioninTransactionSet": "",
+                    "C030": {
+                      "_componentDataElementPositioninComposite": "",
+                      "_elementPositioninSegment": "",
+                      "_repeatingDataElementPosition": ""
+                    },
+                    "C998__loop": {
+                      "_contextName": "",
+                      "_contextReference": ""
+                    },
+                    "C999": {
+                      "_dataElementReferenceNumber": "",
+                      "_dataElementReferenceNumber2": ""
+                    }
+                  },
+                  "NTE__loop": {
+                    "_description": "",
+                    "_noteReferenceCode": ""
+                  },
+                  "RED__loop": {
+                    "_agencyQualifierCode": "",
+                    "_codeListQualifierCode": "",
+                    "_description": "",
+                    "_industryCode": "",
+                    "_relatedDataIdentificationCode": "",
+                    "_sourceSubqualifier": ""
+                  }
+                }
+              },
+              "NM1__loop": {
+                "_entityIdentifierCode": "",
+                "_entityIdentifierCode2": "",
+                "_entityRelationshipCode": "",
+                "_entityTypeQualifier": "",
+                "_identificationCode": "",
+                "_identificationCodeQualifier": "",
+                "_nameFirst": "",
+                "_nameLastorOrganizationName": "",
+                "_nameLastorOrganizationName2": "",
+                "_nameMiddle": "",
+                "_namePrefix": "",
+                "_nameSuffix": ""
+              },
+              "PER__loop": {
+                "_communicationNumber": "",
+                "_communicationNumber2": "",
+                "_communicationNumber3": "",
+                "_communicationNumberQualifier": "",
+                "_communicationNumberQualifier2": "",
+                "_communicationNumberQualifier3": "",
+                "_contactFunctionCode": "",
+                "_contactInquiryReference": "",
+                "_name": ""
+              },
+              "QTY__loop": {
+                "_freeformInformation": "",
+                "_quantity": "",
+                "_quantityQualifier": "",
+                "C001": {
+                  "_exponent": "",
+                  "_exponent2": "",
+                  "_exponent3": "",
+                  "_exponent4": "",
+                  "_exponent5": "",
+                  "_multiplier": "",
+                  "_multiplier2": "",
+                  "_multiplier3": "",
+                  "_multiplier4": "",
+                  "_multiplier5": "",
+                  "_unitorBasisforMeasurementCode": "",
+                  "_unitorBasisforMeasurementCode2": "",
+                  "_unitorBasisforMeasurementCode3": "",
+                  "_unitorBasisforMeasurementCode4": "",
+                  "_unitorBasisforMeasurementCode5": ""
+                }
+              },
+              "REF__loop": {
+                "_description": "",
+                "_referenceIdentification": "",
+                "_referenceIdentificationQualifier": "",
+                "C040": {
+                  "_referenceIdentification": "",
+                  "_referenceIdentification2": "",
+                  "_referenceIdentification3": "",
+                  "_referenceIdentificationQualifier": "",
+                  "_referenceIdentificationQualifier2": "",
+                  "_referenceIdentificationQualifier3": ""
+                }
+              }
+            }
+          },
+          "SE": {
+            "_numberofIncludedSegments": "",
+            "_transactionSetControlNumber": ""
+          }
+        },
+        "GE": {
+          "_groupControlNumber": "",
+          "_numberofTransactionSetsIncluded": ""
+        }
+      },
+      "IEA": {
+        "_interchangeControlNumber": "",
+        "_numberofIncludedFunctionalGroups": ""
+      }
+    }
+  }
+}
