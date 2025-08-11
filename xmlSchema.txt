@@ -1,0 +1,385 @@
+export const schemaInput = `
+	def LIST {
+		ControlSegment Stglogistics824JSON$ControlSegment ;
+		ISA Stglogistics824JSON$ISA ;
+	}
+
+	def ControlSegment {
+		_BUSINESSID String ( overrideKeyName = "@BUSINESSID" ) ;
+		_BUSINESSQUALIFIER String ( overrideKeyName = "@BUSINESSQUALIFIER" ) ;
+		_CLIENT String ( overrideKeyName = "@CLIENT" ) ;
+		_CONTROLTEXT1 String ( overrideKeyName = "@CONTROLTEXT1" ) ;
+		_CONTROLTEXT2 String ( overrideKeyName = "@CONTROLTEXT2" ) ;
+		_CONTROLTEXT3 String ( overrideKeyName = "@CONTROLTEXT3" ) ;
+		_DIRECTION String ( overrideKeyName = "@DIRECTION" ) ;
+		_DOCUMENTSTATUS String ( overrideKeyName = "@DOCUMENTSTATUS" ) ;
+		_EDIMESSAGECODE String ( overrideKeyName = "@EDIMESSAGECODE" ) ;
+		_EDIMESSAGEFUNCTION String ( overrideKeyName = "@EDIMESSAGEFUNCTION" ) ;
+		_EDIMESSAGETYPE String ( overrideKeyName = "@EDIMESSAGETYPE" ) ;
+		_EDITXM String ( overrideKeyName = "@EDITXM" ) ;
+		_EDIVERSION String ( overrideKeyName = "@EDIVERSION" ) ;
+		_GSCONTROLNUMBER String ( overrideKeyName = "@GSCONTROLNUMBER" ) ;
+		_ISACONTROLNUMBER String ( overrideKeyName = "@ISACONTROLNUMBER" ) ;
+		_PARTNERTYPE String ( overrideKeyName = "@PARTNERTYPE" ) ;
+		_PAYLOADFIELDNAME String ( overrideKeyName = "@PAYLOADFIELDNAME" ) ;
+		_RECEIVERID String ( overrideKeyName = "@RECEIVERID" ) ;
+		_RECEIVERQUALIFIER String ( overrideKeyName = "@RECEIVERQUALIFIER" ) ;
+		_SECONDARYBUSINESSID String ( overrideKeyName = "@SECONDARYBUSINESSID" ) ;
+		_SECONDARYBUSINESSQUALIFIER String ( overrideKeyName = "@SECONDARYBUSINESSQUALIFIER" ) ;
+		_SENDERID String ( overrideKeyName = "@SENDERID" ) ;
+		_SENDERQUALIFIER String ( overrideKeyName = "@SENDERQUALIFIER" ) ;
+		_SOURCEDATETIME String ( overrideKeyName = "@SOURCEDATETIME" ) ;
+		_SYSTEMDATETIME String ( overrideKeyName = "@SYSTEMDATETIME" ) ;
+		_TABLENAME String ( overrideKeyName = "@TABLENAME" ) ;
+		_TESTINDICATOR String ( overrideKeyName = "@TESTINDICATOR" ) ;
+	}
+
+	def ISA {
+		_acknowledgmentRequested String ( overrideKeyName = "@acknowledgmentRequested" ) ;
+		_authorizationInformation String ( overrideKeyName = "@authorizationInformation" ) ;
+		_authorizationInformationQualifier String ( overrideKeyName = "@authorizationInformationQualifier" ) ;
+		_componentElementSeparator String ( overrideKeyName = "@componentElementSeparator" ) ;
+		_interchangeControlNumber String ( overrideKeyName = "@interchangeControlNumber" ) ;
+		_interchangeControlVersionNumber String ( overrideKeyName = "@interchangeControlVersionNumber" ) ;
+		_interchangeDate String ( overrideKeyName = "@interchangeDate" ) ;
+		_interchangeIDQualifier String ( overrideKeyName = "@interchangeIDQualifier" ) ;
+		_interchangeIDQualifier2 String ( overrideKeyName = "@interchangeIDQualifier2" ) ;
+		_interchangeReceiverID String ( overrideKeyName = "@interchangeReceiverID" ) ;
+		_interchangeSenderID String ( overrideKeyName = "@interchangeSenderID" ) ;
+		_interchangeTime String ( overrideKeyName = "@interchangeTime" ) ;
+		_interchangeUsageIndicator String ( overrideKeyName = "@interchangeUsageIndicator" ) ;
+		_repetitionSeparator String ( overrideKeyName = "@repetitionSeparator" ) ;
+		_securityInformation String ( overrideKeyName = "@securityInformation" ) ;
+		_securityInformationQualifier String ( overrideKeyName = "@securityInformationQualifier" ) ;
+		GS Stglogistics824JSON$GS [] ;
+		IEA Stglogistics824JSON$IEA ;
+	}
+
+	def GS {
+		_applicationReceiversCode String ( overrideKeyName = "@applicationReceiversCode" ) ;
+		_applicationSendersCode String ( overrideKeyName = "@applicationSendersCode" ) ;
+		_date String ( overrideKeyName = "@date" ) ;
+		_functionalIdentifierCode String ( overrideKeyName = "@functionalIdentifierCode" ) ;
+		_groupControlNumber String ( overrideKeyName = "@groupControlNumber" ) ;
+		_responsibleAgencyCode String ( overrideKeyName = "@responsibleAgencyCode" ) ;
+		_time String ( overrideKeyName = "@time" ) ;
+		_versionReleaseIndustryIdentifierCode String ( overrideKeyName = "@versionReleaseIndustryIdentifierCode" ) ;
+		ST Stglogistics824JSON$ST [] ;
+		GE Stglogistics824JSON$GE ;
+	}
+
+	def ST {
+		_implementationConventionReference String ( overrideKeyName = "@implementationConventionReference" ) ;
+		_transactionSetControlNumber String ( overrideKeyName = "@transactionSetControlNumber" ) ;
+		_transactionSetIdentifierCode String ( overrideKeyName = "@transactionSetIdentifierCode" ) ;
+		BGN Stglogistics824JSON$BGN ;
+		loopN1 Stglogistics824JSON$LoopN1 [] ;
+		loopOTI Stglogistics824JSON$LoopOTI [] ;
+		SE Stglogistics824JSON$SE ;
+	}
+
+	def BGN {
+		_actionCode String ( overrideKeyName = "@actionCode" ) ;
+		_date String ( overrideKeyName = "@date" ) ;
+		_referenceIdentification String ( overrideKeyName = "@referenceIdentification" ) ;
+		_referenceIdentification2 String ( overrideKeyName = "@referenceIdentification2" ) ;
+		_securityLevelCode String ( overrideKeyName = "@securityLevelCode" ) ;
+		_time String ( overrideKeyName = "@time" ) ;
+		_timeCode String ( overrideKeyName = "@timeCode" ) ;
+		_transactionSetPurposeCode String ( overrideKeyName = "@transactionSetPurposeCode" ) ;
+		_transactionTypeCode String ( overrideKeyName = "@transactionTypeCode" ) ;
+	}
+
+	def LoopN1 {
+		N1 Stglogistics824JSON$N1 ;
+	}
+
+	def N1 {
+		_entityIdentifierCode String ( overrideKeyName = "@entityIdentifierCode" ) ;
+		_entityIdentifierCode2 String ( overrideKeyName = "@entityIdentifierCode2" ) ;
+		_entityRelationshipCode String ( overrideKeyName = "@entityRelationshipCode" ) ;
+		_identificationCode String ( overrideKeyName = "@identificationCode" ) ;
+		_identificationCodeQualifier String ( overrideKeyName = "@identificationCodeQualifier" ) ;
+		_name String ( overrideKeyName = "@name" ) ;
+		N2 Stglogistics824JSON$N2 [] ;
+		N3 Stglogistics824JSON$N3 [] ;
+		N4 Stglogistics824JSON$N4 ;
+		PER Stglogistics824JSON$PER [] ;
+		REF Stglogistics824JSON$REF [] ;
+	}
+
+	def N2 {
+		_name String ( overrideKeyName = "@name" ) ;
+		_name2 String ( overrideKeyName = "@name2" ) ;
+	}
+
+	def N3 {
+		_addressInformation String ( overrideKeyName = "@addressInformation" ) ;
+		_addressInformation2 String ( overrideKeyName = "@addressInformation2" ) ;
+	}
+
+	def N4 {
+		_cityName String ( overrideKeyName = "@cityName" ) ;
+		_countryCode String ( overrideKeyName = "@countryCode" ) ;
+		_countrySubdivisionCode String ( overrideKeyName = "@countrySubdivisionCode" ) ;
+		_locationIdentifier String ( overrideKeyName = "@locationIdentifier" ) ;
+		_locationQualifier String ( overrideKeyName = "@locationQualifier" ) ;
+		_postalCode String ( overrideKeyName = "@postalCode" ) ;
+		_stateorProvinceCode String ( overrideKeyName = "@stateorProvinceCode" ) ;
+	}
+
+	def PER {
+		_communicationNumber String ( overrideKeyName = "@communicationNumber" ) ;
+		_communicationNumber2 String ( overrideKeyName = "@communicationNumber2" ) ;
+		_communicationNumber3 String ( overrideKeyName = "@communicationNumber3" ) ;
+		_communicationNumberQualifier String ( overrideKeyName = "@communicationNumberQualifier" ) ;
+		_communicationNumberQualifier2 String ( overrideKeyName = "@communicationNumberQualifier2" ) ;
+		_communicationNumberQualifier3 String ( overrideKeyName = "@communicationNumberQualifier3" ) ;
+		_contactFunctionCode String ( overrideKeyName = "@contactFunctionCode" ) ;
+		_contactInquiryReference String ( overrideKeyName = "@contactInquiryReference" ) ;
+		_name String ( overrideKeyName = "@name" ) ;
+	}
+
+	def REF {
+		_description String ( overrideKeyName = "@description" ) ;
+		_referenceIdentification String ( overrideKeyName = "@referenceIdentification" ) ;
+		_referenceIdentificationQualifier String ( overrideKeyName = "@referenceIdentificationQualifier" ) ;
+		C040 Stglogistics824JSON$C040 ;
+	}
+
+	def C040 {
+		_referenceIdentification String ( overrideKeyName = "@referenceIdentification" ) ;
+		_referenceIdentification2 String ( overrideKeyName = "@referenceIdentification2" ) ;
+		_referenceIdentification3 String ( overrideKeyName = "@referenceIdentification3" ) ;
+		_referenceIdentificationQualifier String ( overrideKeyName = "@referenceIdentificationQualifier" ) ;
+		_referenceIdentificationQualifier2 String ( overrideKeyName = "@referenceIdentificationQualifier2" ) ;
+		_referenceIdentificationQualifier3 String ( overrideKeyName = "@referenceIdentificationQualifier3" ) ;
+	}
+
+	def LoopOTI {
+		OTI Stglogistics824JSON$OTI ;
+	}
+
+	def OTI {
+		_actionCode String ( overrideKeyName = "@actionCode" ) ;
+		_applicationAcknowledgmentCode String ( overrideKeyName = "@applicationAcknowledgmentCode" ) ;
+		_applicationReceiversCode String ( overrideKeyName = "@applicationReceiversCode" ) ;
+		_applicationSendersCode String ( overrideKeyName = "@applicationSendersCode" ) ;
+		_applicationType String ( overrideKeyName = "@applicationType" ) ;
+		_date String ( overrideKeyName = "@date" ) ;
+		_groupControlNumber String ( overrideKeyName = "@groupControlNumber" ) ;
+		_referenceIdentification String ( overrideKeyName = "@referenceIdentification" ) ;
+		_referenceIdentificationQualifier String ( overrideKeyName = "@referenceIdentificationQualifier" ) ;
+		_statusReasonCode String ( overrideKeyName = "@statusReasonCode" ) ;
+		_time String ( overrideKeyName = "@time" ) ;
+		_transactionHandlingCode String ( overrideKeyName = "@transactionHandlingCode" ) ;
+		_transactionSetControlNumber String ( overrideKeyName = "@transactionSetControlNumber" ) ;
+		_transactionSetIdentifierCode String ( overrideKeyName = "@transactionSetIdentifierCode" ) ;
+		_transactionSetPurposeCode String ( overrideKeyName = "@transactionSetPurposeCode" ) ;
+		_transactionTypeCode String ( overrideKeyName = "@transactionTypeCode" ) ;
+		_versionReleaseIndustryIdentifierCode String ( overrideKeyName = "@versionReleaseIndustryIdentifierCode" ) ;
+		AMT Stglogistics824JSON$AMT [] ;
+		DTM Stglogistics824JSON$DTM [] ;
+		loopLM Stglogistics824JSON$LoopLM [] ;
+		loopTED Stglogistics824JSON$LoopTED [] ;
+		NM1 Stglogistics824JSON$NM1 [] ;
+		PER Stglogistics824JSON$PER2 [] ;
+		QTY Stglogistics824JSON$QTY [] ;
+		REF Stglogistics824JSON$REF2 [] ;
+	}
+
+	def AMT {
+		_amountQualifierCode String ( overrideKeyName = "@amountQualifierCode" ) ;
+		_creditDebitFlagCode String ( overrideKeyName = "@creditDebitFlagCode" ) ;
+		_monetaryAmount String ( overrideKeyName = "@monetaryAmount" ) ;
+	}
+
+	def DTM {
+		_date String ( overrideKeyName = "@date" ) ;
+		_dateTimePeriod String ( overrideKeyName = "@dateTimePeriod" ) ;
+		_dateTimePeriodFormatQualifier String ( overrideKeyName = "@dateTimePeriodFormatQualifier" ) ;
+		_dateTimeQualifier String ( overrideKeyName = "@dateTimeQualifier" ) ;
+		_time String ( overrideKeyName = "@time" ) ;
+		_timeCode String ( overrideKeyName = "@timeCode" ) ;
+	}
+
+	def LoopLM {
+		LM Stglogistics824JSON$LM ;
+	}
+
+	def LM {
+		_agencyQualifierCode String ( overrideKeyName = "@agencyQualifierCode" ) ;
+		_sourceSubqualifier String ( overrideKeyName = "@sourceSubqualifier" ) ;
+		loopLQ Stglogistics824JSON$LoopLQ [] ;
+	}
+
+	def LoopLQ {
+		LQ Stglogistics824JSON$LQ ;
+	}
+
+	def LQ {
+		_codeListQualifierCode String ( overrideKeyName = "@codeListQualifierCode" ) ;
+		_industryCode String ( overrideKeyName = "@industryCode" ) ;
+		RED Stglogistics824JSON$RED [] ;
+	}
+
+	def RED {
+		_agencyQualifierCode String ( overrideKeyName = "@agencyQualifierCode" ) ;
+		_codeListQualifierCode String ( overrideKeyName = "@codeListQualifierCode" ) ;
+		_description String ( overrideKeyName = "@description" ) ;
+		_industryCode String ( overrideKeyName = "@industryCode" ) ;
+		_relatedDataIdentificationCode String ( overrideKeyName = "@relatedDataIdentificationCode" ) ;
+		_sourceSubqualifier String ( overrideKeyName = "@sourceSubqualifier" ) ;
+	}
+
+	def LoopTED {
+		TED Stglogistics824JSON$TED ;
+	}
+
+	def TED {
+		_applicationErrorConditionCode String ( overrideKeyName = "@applicationErrorConditionCode" ) ;
+		_copyofBadDataElement String ( overrideKeyName = "@copyofBadDataElement" ) ;
+		_dataElementNewContent String ( overrideKeyName = "@dataElementNewContent" ) ;
+		_freeformMessage String ( overrideKeyName = "@free-formMessage" ) ;
+		_segmentIDCode String ( overrideKeyName = "@segmentIDCode" ) ;
+		_segmentPositioninTransactionSet String ( overrideKeyName = "@segmentPositioninTransactionSet" ) ;
+		C030 Stglogistics824JSON$C030 ;
+		C999 Stglogistics824JSON$C999 ;
+		CTX Stglogistics824JSON$CTX [] ;
+		NTE Stglogistics824JSON$NTE [] ;
+		RED Stglogistics824JSON$RED2 [] ;
+	}
+
+	def C030 {
+		_componentDataElementPositioninComposite String ( overrideKeyName = "@componentDataElementPositioninComposite" ) ;
+		_elementPositioninSegment String ( overrideKeyName = "@elementPositioninSegment" ) ;
+		_repeatingDataElementPosition String ( overrideKeyName = "@repeatingDataElementPosition" ) ;
+	}
+
+	def C999 {
+		_dataElementReferenceNumber String ( overrideKeyName = "@dataElementReferenceNumber" ) ;
+		_dataElementReferenceNumber2 String ( overrideKeyName = "@dataElementReferenceNumber2" ) ;
+	}
+
+	def CTX {
+		_loopIdentifierCode String ( overrideKeyName = "@loopIdentifierCode" ) ;
+		_segmentIDCode String ( overrideKeyName = "@segmentIDCode" ) ;
+		_segmentPositioninTransactionSet String ( overrideKeyName = "@segmentPositioninTransactionSet" ) ;
+		C030 Stglogistics824JSON$C0302 ;
+		C998 Stglogistics824JSON$C998 [] ;
+		C999 Stglogistics824JSON$C9992 ;
+	}
+
+	def C0302 {
+		_componentDataElementPositioninComposite String ( overrideKeyName = "@componentDataElementPositioninComposite" ) ;
+		_elementPositioninSegment String ( overrideKeyName = "@elementPositioninSegment" ) ;
+		_repeatingDataElementPosition String ( overrideKeyName = "@repeatingDataElementPosition" ) ;
+	}
+
+	def C998 {
+		_contextName String ( overrideKeyName = "@contextName" ) ;
+		_contextReference String ( overrideKeyName = "@contextReference" ) ;
+	}
+
+	def C9992 {
+		_dataElementReferenceNumber String ( overrideKeyName = "@dataElementReferenceNumber" ) ;
+		_dataElementReferenceNumber2 String ( overrideKeyName = "@dataElementReferenceNumber2" ) ;
+	}
+
+	def NTE {
+		_description String ( overrideKeyName = "@description" ) ;
+		_noteReferenceCode String ( overrideKeyName = "@noteReferenceCode" ) ;
+	}
+
+	def RED2 {
+		_agencyQualifierCode String ( overrideKeyName = "@agencyQualifierCode" ) ;
+		_codeListQualifierCode String ( overrideKeyName = "@codeListQualifierCode" ) ;
+		_description String ( overrideKeyName = "@description" ) ;
+		_industryCode String ( overrideKeyName = "@industryCode" ) ;
+		_relatedDataIdentificationCode String ( overrideKeyName = "@relatedDataIdentificationCode" ) ;
+		_sourceSubqualifier String ( overrideKeyName = "@sourceSubqualifier" ) ;
+	}
+
+	def NM1 {
+		_entityIdentifierCode String ( overrideKeyName = "@entityIdentifierCode" ) ;
+		_entityIdentifierCode2 String ( overrideKeyName = "@entityIdentifierCode2" ) ;
+		_entityRelationshipCode String ( overrideKeyName = "@entityRelationshipCode" ) ;
+		_entityTypeQualifier String ( overrideKeyName = "@entityTypeQualifier" ) ;
+		_identificationCode String ( overrideKeyName = "@identificationCode" ) ;
+		_identificationCodeQualifier String ( overrideKeyName = "@identificationCodeQualifier" ) ;
+		_nameFirst String ( overrideKeyName = "@nameFirst" ) ;
+		_nameLastorOrganizationName String ( overrideKeyName = "@nameLastorOrganizationName" ) ;
+		_nameLastorOrganizationName2 String ( overrideKeyName = "@nameLastorOrganizationName2" ) ;
+		_nameMiddle String ( overrideKeyName = "@nameMiddle" ) ;
+		_namePrefix String ( overrideKeyName = "@namePrefix" ) ;
+		_nameSuffix String ( overrideKeyName = "@nameSuffix" ) ;
+	}
+
+	def PER2 {
+		_communicationNumber String ( overrideKeyName = "@communicationNumber" ) ;
+		_communicationNumber2 String ( overrideKeyName = "@communicationNumber2" ) ;
+		_communicationNumber3 String ( overrideKeyName = "@communicationNumber3" ) ;
+		_communicationNumberQualifier String ( overrideKeyName = "@communicationNumberQualifier" ) ;
+		_communicationNumberQualifier2 String ( overrideKeyName = "@communicationNumberQualifier2" ) ;
+		_communicationNumberQualifier3 String ( overrideKeyName = "@communicationNumberQualifier3" ) ;
+		_contactFunctionCode String ( overrideKeyName = "@contactFunctionCode" ) ;
+		_contactInquiryReference String ( overrideKeyName = "@contactInquiryReference" ) ;
+		_name String ( overrideKeyName = "@name" ) ;
+	}
+
+	def QTY {
+		_freeformInformation String ( overrideKeyName = "@free-formInformation" ) ;
+		_quantity String ( overrideKeyName = "@quantity" ) ;
+		_quantityQualifier String ( overrideKeyName = "@quantityQualifier" ) ;
+		C001 Stglogistics824JSON$C001 ;
+	}
+
+	def C001 {
+		_exponent String ( overrideKeyName = "@exponent" ) ;
+		_exponent2 String ( overrideKeyName = "@exponent2" ) ;
+		_exponent3 String ( overrideKeyName = "@exponent3" ) ;
+		_exponent4 String ( overrideKeyName = "@exponent4" ) ;
+		_exponent5 String ( overrideKeyName = "@exponent5" ) ;
+		_multiplier String ( overrideKeyName = "@multiplier" ) ;
+		_multiplier2 String ( overrideKeyName = "@multiplier2" ) ;
+		_multiplier3 String ( overrideKeyName = "@multiplier3" ) ;
+		_multiplier4 String ( overrideKeyName = "@multiplier4" ) ;
+		_multiplier5 String ( overrideKeyName = "@multiplier5" ) ;
+		_unitorBasisforMeasurementCode String ( overrideKeyName = "@unitorBasisforMeasurementCode" ) ;
+		_unitorBasisforMeasurementCode2 String ( overrideKeyName = "@unitorBasisforMeasurementCode2" ) ;
+		_unitorBasisforMeasurementCode3 String ( overrideKeyName = "@unitorBasisforMeasurementCode3" ) ;
+		_unitorBasisforMeasurementCode4 String ( overrideKeyName = "@unitorBasisforMeasurementCode4" ) ;
+		_unitorBasisforMeasurementCode5 String ( overrideKeyName = "@unitorBasisforMeasurementCode5" ) ;
+	}
+
+	def REF2 {
+		_description String ( overrideKeyName = "@description" ) ;
+		_referenceIdentification String ( overrideKeyName = "@referenceIdentification" ) ;
+		_referenceIdentificationQualifier String ( overrideKeyName = "@referenceIdentificationQualifier" ) ;
+		C040 Stglogistics824JSON$C0402 ;
+	}
+
+	def C0402 {
+		_referenceIdentification String ( overrideKeyName = "@referenceIdentification" ) ;
+		_referenceIdentification2 String ( overrideKeyName = "@referenceIdentification2" ) ;
+		_referenceIdentification3 String ( overrideKeyName = "@referenceIdentification3" ) ;
+		_referenceIdentificationQualifier String ( overrideKeyName = "@referenceIdentificationQualifier" ) ;
+		_referenceIdentificationQualifier2 String ( overrideKeyName = "@referenceIdentificationQualifier2" ) ;
+		_referenceIdentificationQualifier3 String ( overrideKeyName = "@referenceIdentificationQualifier3" ) ;
+	}
+
+	def SE {
+		_numberofIncludedSegments String ( overrideKeyName = "@numberofIncludedSegments" ) ;
+		_transactionSetControlNumber String ( overrideKeyName = "@transactionSetControlNumber" ) ;
+	}
+
+	def GE {
+		_groupControlNumber String ( overrideKeyName = "@groupControlNumber" ) ;
+		_numberofTransactionSetsIncluded String ( overrideKeyName = "@numberofTransactionSetsIncluded" ) ;
+	}
+
+	def IEA {
+		_interchangeControlNumber String ( overrideKeyName = "@interchangeControlNumber" ) ;
+		_numberofIncludedFunctionalGroups String ( overrideKeyName = "@numberofIncludedFunctionalGroups" ) ;
+	}
+`;

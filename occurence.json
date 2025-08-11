@@ -1,0 +1,90 @@
+{
+  "ST___0100___Segment": {
+    "minOcc": "1",
+    "maxOcc": "1"
+  },
+  "BGN___0200___Segment": {
+    "minOcc": "1",
+    "maxOcc": "1"
+  },
+  "N1___0300___Segment": {
+    "minOcc": "0",
+    "maxOcc": "1"
+  },
+  "N2___0400___Segment": {
+    "minOcc": "0",
+    "maxOcc": "2"
+  },
+  "N3___0500___Segment": {
+    "minOcc": "0",
+    "maxOcc": "2"
+  },
+  "N4___0600___Segment": {
+    "minOcc": "0",
+    "maxOcc": "1"
+  },
+  "REF___0700___Segment": {
+    "minOcc": "0",
+    "maxOcc": "12"
+  },
+  "PER___0800___Segment": {
+    "minOcc": "0",
+    "maxOcc": "3"
+  },
+  "SE___0900___Segment": {
+    "minOcc": "1",
+    "maxOcc": "1"
+  },
+  "OTI___0100___Segment": {
+    "minOcc": "1",
+    "maxOcc": "1"
+  },
+  "REF___0200___Segment": {
+    "minOcc": "0",
+    "maxOcc": "12"
+  },
+  "DTM___0300___Segment": {
+    "minOcc": "0",
+    "maxOcc": "2"
+  },
+  "PER___0400___Segment": {
+    "minOcc": "0",
+    "maxOcc": "3"
+  },
+  "NM1___0650___Segment": {
+    "minOcc": "0",
+    "maxOcc": "9"
+  },
+  "TED___0700___Segment": {
+    "minOcc": "0",
+    "maxOcc": "1"
+  },
+  "CTX___0750___Segment": {
+    "minOcc": "0",
+    "maxOcc": "10"
+  },
+  "NTE___0800___Segment": {
+    "minOcc": "0",
+    "maxOcc": "100"
+  },
+  "RED___0820___Segment": {
+    "minOcc": "0",
+    "maxOcc": "100"
+  },
+  "LM___0850___Segment": {
+    "minOcc": "0",
+    "maxOcc": "1"
+  },
+  "LQ___0860___SegmentGroup": {
+    "minOcc": "1",
+    "maxOcc": "100"
+  },
+  "LQ___0860___Segment": {
+    "minOcc": "1",
+    "maxOcc": "1"
+  },
+  "RED___0870___Segment": {
+    "minOcc": "0",
+    "maxOcc": "100"
+  }
+}
