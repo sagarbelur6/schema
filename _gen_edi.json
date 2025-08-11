@@ -1,0 +1,738 @@
+{
+  "824": {
+    "Area1": {
+      "ST___0100___Segment": {
+        "143_1": {
+          "value": "",
+          "position": "01"
+        },
+        "329_2": {
+          "value": "",
+          "position": "02"
+        },
+        "1705_3": {
+          "value": "",
+          "position": "03"
+        }
+      },
+      "BGN___0200___Segment": {
+        "353_1": {
+          "value": "",
+          "position": "01"
+        },
+        "127_2": {
+          "value": "",
+          "position": "02"
+        },
+        "373_3": {
+          "value": "",
+          "position": "03"
+        },
+        "337_4": {
+          "value": "",
+          "position": "04"
+        },
+        "623_5": {
+          "value": "",
+          "position": "05"
+        },
+        "127_6": {
+          "value": "",
+          "position": "06"
+        },
+        "640_7": {
+          "value": "",
+          "position": "07"
+        },
+        "306_8": {
+          "value": "",
+          "position": "08"
+        },
+        "786_9": {
+          "value": "",
+          "position": "09"
+        }
+      },
+      "N1___0300___SegmentGroup": [
+        {
+          "N1___0300___Segment": {
+            "98_1": {
+              "value": "",
+              "position": "01"
+            },
+            "93_2": {
+              "value": "",
+              "position": "02"
+            },
+            "66_3": {
+              "value": "",
+              "position": "03"
+            },
+            "67_4": {
+              "value": "",
+              "position": "04"
+            },
+            "706_5": {
+              "value": "",
+              "position": "05"
+            },
+            "98_6": {
+              "value": "",
+              "position": "06"
+            }
+          },
+          "N2___0400___Segment": {
+            "93_1": {
+              "value": "",
+              "position": "01"
+            },
+            "93_2": {
+              "value": "",
+              "position": "02"
+            }
+          },
+          "N3___0500___Segment": {
+            "166_1": {
+              "value": "",
+              "position": "01"
+            },
+            "166_2": {
+              "value": "",
+              "position": "02"
+            }
+          },
+          "N4___0600___Segment": {
+            "19_1": {
+              "value": "",
+              "position": "01"
+            },
+            "156_2": {
+              "value": "",
+              "position": "02"
+            },
+            "116_3": {
+              "value": "",
+              "position": "03"
+            },
+            "26_4": {
+              "value": "",
+              "position": "04"
+            },
+            "309_5": {
+              "value": "",
+              "position": "05"
+            },
+            "310_6": {
+              "value": "",
+              "position": "06"
+            },
+            "1715_7": {
+              "value": "",
+              "position": "07"
+            }
+          },
+          "REF___0700___Segment": {
+            "128_1": {
+              "value": "",
+              "position": "01"
+            },
+            "127_2": {
+              "value": "",
+              "position": "02"
+            },
+            "352_3": {
+              "value": "",
+              "position": "03"
+            },
+            "C040": {
+              "128_1": {
+                "value": "",
+                "position": "01"
+              },
+              "127_2": {
+                "value": "",
+                "position": "02"
+              },
+              "128_3": {
+                "value": "",
+                "position": "03"
+              },
+              "127_4": {
+                "value": "",
+                "position": "04"
+              },
+              "128_5": {
+                "value": "",
+                "position": "05"
+              },
+              "127_6": {
+                "value": "",
+                "position": "06"
+              }
+            }
+          },
+          "PER___0800___Segment": {
+            "366_1": {
+              "value": "",
+              "position": "01"
+            },
+            "93_2": {
+              "value": "",
+              "position": "02"
+            },
+            "365_3": {
+              "value": "",
+              "position": "03"
+            },
+            "364_4": {
+              "value": "",
+              "position": "04"
+            },
+            "365_5": {
+              "value": "",
+              "position": "05"
+            },
+            "364_6": {
+              "value": "",
+              "position": "06"
+            },
+            "365_7": {
+              "value": "",
+              "position": "07"
+            },
+            "364_8": {
+              "value": "",
+              "position": "08"
+            },
+            "443_9": {
+              "value": "",
+              "position": "09"
+            }
+          }
+        }
+      ]
+    },
+    "Area2": {
+      "OTI___0100___SegmentGroup": [
+        {
+          "OTI___0100___Segment": {
+            "110_1": {
+              "value": "",
+              "position": "01"
+            },
+            "128_2": {
+              "value": "",
+              "position": "02"
+            },
+            "127_3": {
+              "value": "",
+              "position": "03"
+            },
+            "142_4": {
+              "value": "",
+              "position": "04"
+            },
+            "124_5": {
+              "value": "",
+              "position": "05"
+            },
+            "373_6": {
+              "value": "",
+              "position": "06"
+            },
+            "337_7": {
+              "value": "",
+              "position": "07"
+            },
+            "28_8": {
+              "value": "",
+              "position": "08"
+            },
+            "329_9": {
+              "value": "",
+              "position": "09"
+            },
+            "143_10": {
+              "value": "",
+              "position": "10"
+            },
+            "480_11": {
+              "value": "",
+              "position": "11"
+            },
+            "353_12": {
+              "value": "",
+              "position": "12"
+            },
+            "640_13": {
+              "value": "",
+              "position": "13"
+            },
+            "346_14": {
+              "value": "",
+              "position": "14"
+            },
+            "306_15": {
+              "value": "",
+              "position": "15"
+            },
+            "305_16": {
+              "value": "",
+              "position": "16"
+            },
+            "641_17": {
+              "value": "",
+              "position": "17"
+            }
+          },
+          "REF___0200___Segment": {
+            "128_1": {
+              "value": "",
+              "position": "01"
+            },
+            "127_2": {
+              "value": "",
+              "position": "02"
+            },
+            "352_3": {
+              "value": "",
+              "position": "03"
+            },
+            "C040": {
+              "128_1": {
+                "value": "",
+                "position": "01"
+              },
+              "127_2": {
+                "value": "",
+                "position": "02"
+              },
+              "128_3": {
+                "value": "",
+                "position": "03"
+              },
+              "127_4": {
+                "value": "",
+                "position": "04"
+              },
+              "128_5": {
+                "value": "",
+                "position": "05"
+              },
+              "127_6": {
+                "value": "",
+                "position": "06"
+              }
+            }
+          },
+          "DTM___0300___Segment": {
+            "374_1": {
+              "value": "",
+              "position": "01"
+            },
+            "373_2": {
+              "value": "",
+              "position": "02"
+            },
+            "337_3": {
+              "value": "",
+              "position": "03"
+            },
+            "623_4": {
+              "value": "",
+              "position": "04"
+            },
+            "1250_5": {
+              "value": "",
+              "position": "05"
+            },
+            "1251_6": {
+              "value": "",
+              "position": "06"
+            }
+          },
+          "PER___0400___Segment": {
+            "366_1": {
+              "value": "",
+              "position": "01"
+            },
+            "93_2": {
+              "value": "",
+              "position": "02"
+            },
+            "365_3": {
+              "value": "",
+              "position": "03"
+            },
+            "364_4": {
+              "value": "",
+              "position": "04"
+            },
+            "365_5": {
+              "value": "",
+              "position": "05"
+            },
+            "364_6": {
+              "value": "",
+              "position": "06"
+            },
+            "365_7": {
+              "value": "",
+              "position": "07"
+            },
+            "364_8": {
+              "value": "",
+              "position": "08"
+            },
+            "443_9": {
+              "value": "",
+              "position": "09"
+            }
+          },
+          "AMT___0500___Segment": {
+            "522_1": {
+              "value": "",
+              "position": "01"
+            },
+            "782_2": {
+              "value": "",
+              "position": "02"
+            },
+            "478_3": {
+              "value": "",
+              "position": "03"
+            }
+          },
+          "QTY___0600___Segment": {
+            "673_1": {
+              "value": "",
+              "position": "01"
+            },
+            "380_2": {
+              "value": "",
+              "position": "02"
+            },
+            "C001": {
+              "355_1": {
+                "value": "",
+                "position": "01"
+              },
+              "1018_2": {
+                "value": "",
+                "position": "02"
+              },
+              "649_3": {
+                "value": "",
+                "position": "03"
+              },
+              "355_4": {
+                "value": "",
+                "position": "04"
+              },
+              "1018_5": {
+                "value": "",
+                "position": "05"
+              },
+              "649_6": {
+                "value": "",
+                "position": "06"
+              },
+              "355_7": {
+                "value": "",
+                "position": "07"
+              },
+              "1018_8": {
+                "value": "",
+                "position": "08"
+              },
+              "649_9": {
+                "value": "",
+                "position": "09"
+              },
+              "355_10": {
+                "value": "",
+                "position": "10"
+              },
+              "1018_11": {
+                "value": "",
+                "position": "11"
+              },
+              "649_12": {
+                "value": "",
+                "position": "12"
+              },
+              "355_13": {
+                "value": "",
+                "position": "13"
+              },
+              "1018_14": {
+                "value": "",
+                "position": "14"
+              },
+              "649_15": {
+                "value": "",
+                "position": "15"
+              }
+            },
+            "61_4": {
+              "value": "",
+              "position": "04"
+            }
+          },
+          "NM1___0650___Segment": {
+            "98_1": {
+              "value": "",
+              "position": "01"
+            },
+            "1065_2": {
+              "value": "",
+              "position": "02"
+            },
+            "1035_3": {
+              "value": "",
+              "position": "03"
+            },
+            "1036_4": {
+              "value": "",
+              "position": "04"
+            },
+            "1037_5": {
+              "value": "",
+              "position": "05"
+            },
+            "1038_6": {
+              "value": "",
+              "position": "06"
+            },
+            "1039_7": {
+              "value": "",
+              "position": "07"
+            },
+            "66_8": {
+              "value": "",
+              "position": "08"
+            },
+            "67_9": {
+              "value": "",
+              "position": "09"
+            },
+            "706_10": {
+              "value": "",
+              "position": "10"
+            },
+            "98_11": {
+              "value": "",
+              "position": "11"
+            },
+            "1035_12": {
+              "value": "",
+              "position": "12"
+            }
+          },
+          "TED___0700___SegmentGroup": [
+            {
+              "TED___0700___Segment": {
+                "647_1": {
+                  "value": "",
+                  "position": "01"
+                },
+                "3_2": {
+                  "value": "",
+                  "position": "02"
+                },
+                "721_3": {
+                  "value": "",
+                  "position": "03"
+                },
+                "719_4": {
+                  "value": "",
+                  "position": "04"
+                },
+                "C030": {
+                  "722_1": {
+                    "value": "",
+                    "position": "01"
+                  },
+                  "1528_2": {
+                    "value": "",
+                    "position": "02"
+                  },
+                  "1686_3": {
+                    "value": "",
+                    "position": "03"
+                  }
+                },
+                "C999": {
+                  "725_1": {
+                    "value": "",
+                    "position": "01"
+                  },
+                  "725_2": {
+                    "value": "",
+                    "position": "02"
+                  }
+                },
+                "724_7": {
+                  "value": "",
+                  "position": "07"
+                },
+                "961_8": {
+                  "value": "",
+                  "position": "08"
+                }
+              },
+              "CTX___0750___Segment": {
+                "C998": {
+                  "9999_1": {
+                    "value": "",
+                    "position": "01"
+                  },
+                  "9998_2": {
+                    "value": "",
+                    "position": "02"
+                  }
+                },
+                "721_2": {
+                  "value": "",
+                  "position": "02"
+                },
+                "719_3": {
+                  "value": "",
+                  "position": "03"
+                },
+                "447_4": {
+                  "value": "",
+                  "position": "04"
+                },
+                "C030": {
+                  "722_1": {
+                    "value": "",
+                    "position": "01"
+                  },
+                  "1528_2": {
+                    "value": "",
+                    "position": "02"
+                  },
+                  "1686_3": {
+                    "value": "",
+                    "position": "03"
+                  }
+                },
+                "C999": {
+                  "725_1": {
+                    "value": "",
+                    "position": "01"
+                  },
+                  "725_2": {
+                    "value": "",
+                    "position": "02"
+                  }
+                }
+              },
+              "NTE___0800___Segment": {
+                "363_1": {
+                  "value": "",
+                  "position": "01"
+                },
+                "352_2": {
+                  "value": "",
+                  "position": "02"
+                }
+              },
+              "RED___0820___Segment": {
+                "352_1": {
+                  "value": "",
+                  "position": "01"
+                },
+                "1609_2": {
+                  "value": "",
+                  "position": "02"
+                },
+                "559_3": {
+                  "value": "",
+                  "position": "03"
+                },
+                "822_4": {
+                  "value": "",
+                  "position": "04"
+                },
+                "1270_5": {
+                  "value": "",
+                  "position": "05"
+                },
+                "1271_6": {
+                  "value": "",
+                  "position": "06"
+                }
+              }
+            }
+          ],
+          "LM___0850___SegmentGroup": [
+            {
+              "LM___0850___Segment": {
+                "559_1": {
+                  "value": "",
+                  "position": "01"
+                },
+                "822_2": {
+                  "value": "",
+                  "position": "02"
+                }
+              },
+              "LQ___0860___SegmentGroup": [
+                {
+                  "LQ___0860___Segment": {
+                    "1270_1": {
+                      "value": "",
+                      "position": "01"
+                    },
+                    "1271_2": {
+                      "value": "",
+                      "position": "02"
+                    }
+                  },
+                  "RED___0870___Segment": {
+                    "352_1": {
+                      "value": "",
+                      "position": "01"
+                    },
+                    "1609_2": {
+                      "value": "",
+                      "position": "02"
+                    },
+                    "559_3": {
+                      "value": "",
+                      "position": "03"
+                    },
+                    "822_4": {
+                      "value": "",
+                      "position": "04"
+                    },
+                    "1270_5": {
+                      "value": "",
+                      "position": "05"
+                    },
+                    "1271_6": {
+                      "value": "",
+                      "position": "06"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "SE___0900___Segment": {
+        "96_1": {
+          "value": "",
+          "position": "01"
+        },
+        "329_2": {
+          "value": "",
+          "position": "02"
+        }
+      }
+    }
+  }
+}
