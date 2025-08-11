@@ -702,6 +702,75 @@ class PtfOrchestrator:
             edi_part = ptf.replace(xml_part, '')
         return edi_part, xml_part
 
+    # Helpers for diagram-based EDI/XML building
+    def _iter_segments(self, root: DiagramNode):
+        stack = list(root.children or [])
+        while stack:
+            node = stack.pop(0)
+            if node.name and node.position:
+                yield node
+            stack[0:0] = node.children
+
+    def _elements_for_segment(self, seg_name: str, input_details_lines: List[str]) -> Dict[str, Any]:
+        # Heuristic: filter lines mentioning the segment, then collect element sequence numbers and IDs
+        # Expected shape: "93_1": {"value":"", "position":"01"}
+        elements: Dict[str, Any] = {}
+        # Parse table-like lines
+        for raw in input_details_lines:
+            line = raw.strip()
+            if not line:
+                continue
+            if seg_name not in line:
+                continue
+            # Extract element id (numeric) and position
+            id_m = re.search(r"\b(\d{2,4})\b", line)
+            pos_m = re.search(r"\bpos(?:ition)?\s*[:=]?\s*(\d{1,2})\b", line, flags=re.I)
+            # Also accept formats like 93-1, 93_1, where suffix is position
+            idpos_m = re.search(r"\b(\d{2,4})[_\-](\d{1,2})\b", line)
+            element_id = None
+            position = None
+            if idpos_m:
+                element_id = idpos_m.group(1)
+                position = idpos_m.group(2)
+            else:
+                if id_m:
+                    element_id = id_m.group(1)
+                if pos_m:
+                    position = pos_m.group(1)
+            if element_id and position:
+                key = f"{element_id}_{int(position)}"
+                elements[key] = {"value": "", "position": f"{int(position):02d}"}
+        # If nothing found, emit a default 01 position placeholder to avoid empty segments
+        if not elements:
+            elements["1_1"] = {"value": "", "position": "01"}
+        return elements
+
+    def _attributes_from_children(self, node: DiagramNode) -> Dict[str, Any]:
+        # Convert child nodes to underscore-leading camelCase-ish attribute keys based on label/name
+        attrs: Dict[str, Any] = {}
+        for child in node.children:
+            key = None
+            # Prefer known XML attribute names by mapping codes
+            mapping = {
+                'N4': ['_cityName','_countryCode','_countrySubdivisionCode','_locationIdentifier','_locationQualifier','_postalCode','_stateorProvinceCode'],
+            }
+            if node.name in mapping:
+                for k in mapping[node.name]:
+                    attrs.setdefault(k, "")
+                # continue to next child; mapping prepopulated
+                continue
+            # Fallback: build from child label tokens
+            tokens = re.findall(r"[A-Za-z]+", child.label)
+            if tokens:
+                key = '_' + ''.join([tokens[0].lower()] + [t.capitalize() for t in tokens[1:]])
+            else:
+                key = '_' + (child.name.lower() if child.name else 'field')
+            attrs[key] = ""
+        if not attrs:
+            # If leaf, make an empty attribute to indicate presence
+            attrs['_value'] = ""
+        return attrs
+
 
 ################################################################################
 # Main
@@ -766,15 +835,29 @@ def main(argv: Optional[List[str]] = None) -> int:
                 break
         msg_key = msg_num or 'MSG'
 
-        edi_json = {
-            msg_key: {
-                **({"Branch": DiagramParser.to_json(input_branch)} if input_branch else {}),
-                **({"Fields": input_fields} if input_fields else {}),
-            }
-        }
-        xml_json = {
-            **({"Branch": DiagramParser.to_json(output_branch)} if output_branch else {})
-        }
+        # Build EDI segments from input branch + input details
+        seg_map: Dict[str, Dict[str, Any]] = {}
+        if input_branch:
+            for seg_node in orchestrator._iter_segments(input_branch):
+                if not seg_node.name or not seg_node.position:
+                    continue
+                seg_key = f"{seg_node.name}___{seg_node.position}___Segment"
+                elements = orchestrator._elements_for_segment(seg_node.name, dparser.sections.get('input_details', []))
+                seg_map[seg_key] = elements
+
+        edi_json = { msg_key: seg_map }
+
+        # Build XML structure from output branch: each element with its leaf children as attributes
+        xml_json = {}
+        if output_branch:
+            for node in output_branch.children:
+                if node.name and node.children:
+                    xml_json[node.name] = orchestrator._attributes_from_children(node)
+
+        # If nothing extracted, keep minimal structures
+        edi_json = edi_json or { msg_key: {} }
+        xml_json = xml_json or {}
+
 
     if out_edi is None or out_xml is None:
         # As a last resort (no PTF and no outputs provided), write to CWD
