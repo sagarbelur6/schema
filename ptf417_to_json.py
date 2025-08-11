@@ -537,10 +537,10 @@ class DiagramNode:
 
 class DiagramParser:
     SECTION_PATTERNS = [
-        (re.compile(r"^\s*input\s+branch\s+diagram\b[:\-]?", re.I), 'input_branch'),
-        (re.compile(r"^\s*output\s+branch\s+diagram\b[:\-]?", re.I), 'output_branch'),
-        (re.compile(r"^\s*input\s+record\s+details\b[:\-]?", re.I), 'input_details'),
-        (re.compile(r"^\s*output\s+record\s+details\b[:\-]?", re.I), 'output_details'),
+        (re.compile(r"^\s*input\s+branch\s+diagram\b.*", re.I), 'input_branch'),
+        (re.compile(r"^\s*output\s+branch\s+diagram\b.*", re.I), 'output_branch'),
+        (re.compile(r"^\s*input\s+record\s+details\b.*", re.I), 'input_details'),
+        (re.compile(r"^\s*output\s+record\s+details\b.*", re.I), 'output_details'),
     ]
 
     def __init__(self, text: str) -> None:
@@ -599,29 +599,74 @@ class DiagramParser:
         headers = None
         for raw in lines:
             line = raw.strip()
-            if not line:
+            if not line or set(line) in ({'-'},{'='},{'_'},{'*'}):
                 continue
-            # Detect headers if a line has separators or known header words
-            if headers is None and re.search(r"\b(name|field|element)\b", line, re.I):
-                # Split headers by | or 2+ spaces
-                headers = self._smart_split(line)
-                continue
+            # Detect headers: look for multiple columns separated by '|' or 2+ spaces
+            if headers is None and (('|' in line) or re.search(r"\s{2,}", line)):
+                heads = self._smart_split(line)
+                if len(heads) >= 2:
+                    headers = [h.strip().lower().replace(' ', '') for h in heads]
+                    continue
             parts = self._smart_split(line)
             if headers and len(parts) >= 1:
-                name = parts[0]
-                attrs: Dict[str, Any] = {}
-                for i, h in enumerate(headers[1:], start=1):
+                # Align to headers length
+                row: Dict[str, Any] = {}
+                for i, h in enumerate(headers):
                     if i < len(parts):
-                        attrs[h] = parts[i]
-                fields[name] = attrs
-            else:
-                # Key: value style
-                kv = self._kv_pairs(line)
-                if kv:
-                    name = kv.pop('name', kv.pop('field', kv.pop('element', None)))
-                    if name:
-                        fields[name] = kv
+                        row[h] = parts[i]
+                key = row.get('name') or row.get('field') or row.get('element') or row.get('dataelement') or row.get('de') or parts[0]
+                fields[key] = row
+                continue
+            # Key: value pairs style
+            kv = self._kv_pairs(line)
+            if kv:
+                name = kv.pop('name', kv.pop('field', kv.pop('element', None)))
+                if name:
+                    fields[name] = kv
         return fields
+
+    def parse_rows(self, lines: List[str]) -> List[Dict[str, Any]]:
+        # Return list of row dicts using detected header line
+        rows: List[Dict[str, Any]] = []
+        headers = None
+        for raw in lines:
+            line = raw.strip()
+            if not line or set(line) in ({'-'},{'='},{'_'},{'*'}):
+                continue
+            if headers is None and (('|' in line) or re.search(r"\s{2,}", line)):
+                heads = self._smart_split(line)
+                if len(heads) >= 2:
+                    headers = [h.strip().lower().replace(' ', '') for h in heads]
+                    continue
+            parts = self._smart_split(line)
+            if headers and parts:
+                row: Dict[str, Any] = {}
+                for i, h in enumerate(headers):
+                    if i < len(parts):
+                        row[h] = parts[i]
+                rows.append(row)
+        return rows
+
+    def scan_segments_from_branch(self, lines: List[str]) -> List[Tuple[str,str]]:
+        # Fallback when tree parsing is weak: return list of (position4, NAME)
+        segs: List[Tuple[str,str]] = []
+        for raw in lines:
+            if not raw.strip():
+                continue
+            pos_m = re.search(r"\b(\d{4})\b", raw)
+            names = re.findall(r"\b([A-Z]{2,3}\d?)\b", raw)
+            if pos_m and names:
+                # Prefer last token like N1, N2, N4, ST, BGN, etc.
+                segs.append((pos_m.group(1), names[-1]))
+        # dedupe preserving first occurrence
+        seen = set()
+        out: List[Tuple[str,str]] = []
+        for p,n in segs:
+            key = (p,n)
+            if key not in seen:
+                seen.add(key)
+                out.append((p,n))
+        return out
 
     @staticmethod
     def _leading_spaces(s: str) -> int:
@@ -671,6 +716,17 @@ class DiagramParser:
             **({"cardinality": {"min": node.cardinality[0], "max": node.cardinality[1]}} if node.cardinality else {}),
             **({"children": [DiagramParser.to_json(c) for c in node.children]} if node.children else {}),
         }
+
+    @staticmethod
+    def normalize_attr_name(s: str) -> str:
+        # Convert to leading-underscore lowerCamel
+        tokens = re.split(r"[^A-Za-z0-9]+", s)
+        tokens = [t for t in tokens if t]
+        if not tokens:
+            return '_value'
+        first = tokens[0].lower()
+        rest = ''.join(t.capitalize() for t in tokens[1:])
+        return '_' + first + rest
 
 
 ################################################################################
@@ -822,9 +878,61 @@ def main(argv: Optional[List[str]] = None) -> int:
         # Diagram-based parsing
         dparser = DiagramParser(edi_text)
         dparser.parse_sections()
-        input_branch = dparser.parse_tree(dparser.sections.get('input_branch', []))
-        output_branch = dparser.parse_tree(dparser.sections.get('output_branch', []))
-        input_fields = dparser.parse_fields(dparser.sections.get('input_details', []))
+        input_branch_lines = dparser.sections.get('input_branch', [])
+        output_branch_lines = dparser.sections.get('output_branch', [])
+        input_branch = dparser.parse_tree(input_branch_lines)
+        output_branch = dparser.parse_tree(output_branch_lines)
+
+        input_rows = dparser.parse_rows(dparser.sections.get('input_details', []))
+        output_rows = dparser.parse_rows(dparser.sections.get('output_details', []))
+
+        # Build segment position map from branch, fallback to scan if needed
+        seg_positions: Dict[str,str] = {}
+        if input_branch:
+            for seg in (input_branch.children or []):
+                if seg.name and seg.position:
+                    seg_positions[seg.name] = seg.position
+        if not seg_positions:
+            for pos,name in dparser.scan_segments_from_branch(input_branch_lines):
+                seg_positions.setdefault(name, pos)
+
+        # Column mapping for input rows
+        def pick(d: Dict[str,Any], names: List[str]) -> Optional[str]:
+            for k in d.keys():
+                kl = k.lower()
+                for n in names:
+                    if kl == n or kl.startswith(n):
+                        v = str(d[k]).strip()
+                        if v:
+                            return v
+            return None
+
+        edi_segments: Dict[str, Dict[str, Any]] = {}
+        for row in input_rows:
+            seg_name = pick(row, ['segment','seg','segmentname','segmentid','segment_'])
+            elem = pick(row, ['element','elementid','dataelement','de','id'])
+            pos = pick(row, ['position','pos','sequence','seq'])
+            if not seg_name or not elem or not pos:
+                continue
+            # Normalize segment token (e.g., N2: -> N2)
+            seg_name = re.sub(r"[^A-Za-z0-9]", "", seg_name)
+            if not seg_name:
+                continue
+            seg_pos4 = seg_positions.get(seg_name)
+            if not seg_pos4:
+                # Cannot place without 4-digit area code
+                continue
+            seg_key = f"{seg_name}___{seg_pos4}___Segment"
+            edi_segments.setdefault(seg_key, {})
+            try:
+                pos_int = int(re.sub(r"\D", "", pos))
+            except ValueError:
+                pos_int = 1
+            elem_id = re.findall(r"\d+", elem)
+            if not elem_id:
+                continue
+            key = f"{elem_id[0]}_{pos_int}"
+            edi_segments[seg_key][key] = {"value": "", "position": f"{pos_int:02d}"}
 
         # Infer message number from header lines
         msg_num = None
@@ -833,26 +941,33 @@ def main(argv: Optional[List[str]] = None) -> int:
             if m:
                 msg_num = m.group(1)
                 break
-        msg_key = msg_num or 'MSG'
+        msg_key = msg_num or '417'
+        edi_json = { msg_key: edi_segments }
 
-        # Build EDI segments from input branch + input details
-        seg_map: Dict[str, Dict[str, Any]] = {}
-        if input_branch:
-            for seg_node in orchestrator._iter_segments(input_branch):
-                if not seg_node.name or not seg_node.position:
-                    continue
-                seg_key = f"{seg_node.name}___{seg_node.position}___Segment"
-                elements = orchestrator._elements_for_segment(seg_node.name, dparser.sections.get('input_details', []))
-                seg_map[seg_key] = elements
+        # Build XML attributes by grouping output rows under segments from output branch or rows
+        xml_by_seg: Dict[str, Dict[str,str]] = {}
+        # If we can detect a 'segment' column in output rows
+        for row in output_rows:
+            seg_name = pick(row, ['segment','seg','parent','loop'])
+            name_val = pick(row, ['name','field','element','attributename','attribute'])
+            if not name_val:
+                continue
+            attr = DiagramParser.normalize_attr_name(name_val)
+            if seg_name:
+                seg = re.sub(r"[^A-Za-z0-9]", "", seg_name)
+                if seg:
+                    xml_by_seg.setdefault(seg, {})[attr] = ""
+        # If none, infer from output branch children
+        if not xml_by_seg and output_branch:
+            for node in output_branch.children or []:
+                if node.name:
+                    attrs = {}
+                    for ch in node.children:
+                        attrs[DiagramParser.normalize_attr_name(ch.label)] = ""
+                    if attrs:
+                        xml_by_seg[node.name] = attrs
 
-        edi_json = { msg_key: seg_map }
-
-        # Build XML structure from output branch: each element with its leaf children as attributes
-        xml_json = {}
-        if output_branch:
-            for node in output_branch.children:
-                if node.name and node.children:
-                    xml_json[node.name] = orchestrator._attributes_from_children(node)
+        xml_json = {seg: attrs for seg, attrs in xml_by_seg.items()}
 
         # If nothing extracted, keep minimal structures
         edi_json = edi_json or { msg_key: {} }
