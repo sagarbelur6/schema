@@ -213,27 +213,58 @@ class EdiSchemaParser:
     # --- Parse the message area structure for any message number ---
 
     def _parse_message_any(self) -> None:
-        # Locate a message block: def message <num> { ... }
-        msg_header = re.search(r"def\s+message\s+(\d+)\s*\{", self.text)
-        if not msg_header:
+        # Strategy:
+        # 1) Prefer a message block inside derivedMessage: def derivedMessage ... { def message <num> { ... } }
+        # 2) Else search globally for def message <num> { ... }
+        # 3) As a fallback, use the derivedMessage block body and infer message number from its name
+        body_for_areas: Optional[str] = None
+
+        # Try derivedMessage first
+        der = re.search(r"def\s+derivedMessage\s+([^\s{]+)\s*\{", self.text)
+        if der:
+            der_start = der.end()
+            der_end = self._find_matching_brace(der_start)
+            if der_end != -1:
+                der_body = self.text[der_start:der_end]
+                msg = re.search(r"def\s+message\s+(\d+)\s*\{", der_body)
+                if msg:
+                    self.message_number = msg.group(1)
+                    m_start = der_start + msg.end()
+                    m_end = self._find_matching_brace(m_start)
+                    if m_end != -1:
+                        body_for_areas = self.text[m_start:m_end]
+                else:
+                    # Infer message number from derivedMessage name if present (digits inside name)
+                    name = der.group(1)
+                    num_m = re.search(r"(\d{3,4})", name)
+                    if num_m:
+                        self.message_number = num_m.group(1)
+                    body_for_areas = der_body
+
+        # If still no body, search globally for def message <num>
+        if body_for_areas is None:
+            msg_header = re.search(r"def\s+message\s+(\d+)\s*\{", self.text)
+            if msg_header:
+                self.message_number = self.message_number or msg_header.group(1)
+                start = msg_header.end()
+                end = self._find_matching_brace(start)
+                if end != -1:
+                    body_for_areas = self.text[start:end]
+
+        if body_for_areas is None:
+            # Could not locate message body
             return
-        self.message_number = msg_header.group(1)
-        start = msg_header.end()
-        end = self._find_matching_brace(start)
-        if end == -1:
-            return
-        body = self.text[start:end]
 
         # Parse areas: def area 1 { ... }, def area 2 { ... }, etc.
         area_pattern = r"def\s+area\s+(\d+)\s*\{"
         areas: Dict[str, List[EdiAreaEntry]] = {}
-        for am in re.finditer(area_pattern, body):
+        for am in re.finditer(area_pattern, body_for_areas):
             area_num = am.group(1)
             astart_rel = am.end()
-            aend_rel = self._find_matching_brace_in_text(body, astart_rel)
+            aend_rel = self._find_matching_brace_in_text(body_for_areas, astart_rel)
             if aend_rel == -1:
                 continue
-            abody = body[astart_rel:aend_rel]
+            abody = body_for_areas[astart_rel:aend_rel]
             entries = self._parse_area_entries(abody)
             areas[area_num] = entries
         self.message_areas = areas
@@ -401,9 +432,14 @@ class XmlSchemaParser:
         self._parse_types(dsl)
 
     def _extract_dsl(self, text: str) -> str:
+        # Try full-line pattern first
         m = re.search(r"schemaInput\s*=\s*`([\s\S]*?)`;\s*$", text, re.MULTILINE)
         if m:
             return m.group(1)
+        # Otherwise, try any inline backtick block (first occurrence)
+        m2 = re.search(r"`([\s\S]*?)`", text)
+        if m2:
+            return m2.group(1)
         return text
 
     def _parse_types(self, dsl: str) -> None:
