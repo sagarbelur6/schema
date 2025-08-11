@@ -55,6 +55,35 @@ def write_json_file(path: str, data: Any) -> None:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
 
+def find_txt_input_file(input_dir: str) -> Optional[str]:
+    """Auto-detect a single .txt/.TXT input file in the provided directory.
+    Prefers names that look like PTF*.txt; ignores known schema files.
+    Returns absolute path or None if not found.
+    """
+    if not os.path.isdir(input_dir):
+        return None
+    candidates: List[str] = []
+    for name in os.listdir(input_dir):
+        lower = name.lower()
+        if not lower.endswith('.txt'):
+            continue
+        if lower in {'edischema.txt', 'xmlschema.txt'}:
+            continue
+        if lower.startswith('ptf') or lower.startswith('x12') or lower.startswith('417'):
+            candidates.append(name)
+    # Fallback to any .txt if no preferred names found
+    if not candidates:
+        for name in os.listdir(input_dir):
+            lower = name.lower()
+            if lower.endswith('.txt') and lower not in {'edischema.txt', 'xmlschema.txt'}:
+                candidates.append(name)
+    if not candidates:
+        return None
+    # Pick the first sorted candidate
+    candidates.sort()
+    return os.path.abspath(os.path.join(input_dir, candidates[0]))
+
+
 ################################################################################
 # EDI schema parsing (from Extol-style DSL as seen in ediSchema.txt)
 ################################################################################
@@ -496,16 +525,33 @@ class PtfOrchestrator:
 ################################################################################
 
 def main(argv: Optional[List[str]] = None) -> int:
-    parser = argparse.ArgumentParser(description="Parse PTF-417.TXT or separate schemas to generate edi.json and xml.json")
-    parser.add_argument('--ptf', dest='ptf', default=None, help='Path to combined PTF-417.TXT containing both EDI and XML schema')
+    parser = argparse.ArgumentParser(description="Parse PTF-*.TXT (417 or other) or separate schemas to generate edi.json and xml.json in the input folder")
+    parser.add_argument('--ptf', dest='ptf', default=None, help='Path to combined PTF .TXT containing both EDI and XML schema')
+    parser.add_argument('--input-dir', dest='input_dir', default=None, help='Directory to auto-detect a single .txt input file (defaults to CWD)')
     parser.add_argument('--edi-schema', dest='edi_schema', default='/workspace/ediSchema.txt', help='Path to EDI schema DSL file (fallback)')
     parser.add_argument('--xml-schema', dest='xml_schema', default='/workspace/xmlSchema.txt', help='Path to XML schema DSL file (fallback)')
-    parser.add_argument('--out-edi', dest='out_edi', default='/workspace/edi.json', help='Output path for EDI JSON')
-    parser.add_argument('--out-xml', dest='out_xml', default='/workspace/xml.json', help='Output path for XML JSON')
+    parser.add_argument('--out-edi', dest='out_edi', default=None, help='Optional explicit output path for EDI JSON (overrides same-folder rule)')
+    parser.add_argument('--out-xml', dest='out_xml', default=None, help='Optional explicit output path for XML JSON (overrides same-folder rule)')
 
     args = parser.parse_args(argv)
 
-    orchestrator = PtfOrchestrator(args.ptf, args.edi_schema, args.xml_schema)
+    # Auto-detect PTF input if not explicitly provided
+    ptf_path = args.ptf
+    if ptf_path is None:
+        search_dir = args.input_dir or os.getcwd()
+        ptf_path = find_txt_input_file(search_dir)
+
+    # Determine output locations (same folder as input file unless overridden)
+    out_edi = args.out_edi
+    out_xml = args.out_xml
+    if ptf_path and (out_edi is None or out_xml is None):
+        base_dir = os.path.dirname(os.path.abspath(ptf_path))
+        if out_edi is None:
+            out_edi = os.path.join(base_dir, 'edi.json')
+        if out_xml is None:
+            out_xml = os.path.join(base_dir, 'xml.json')
+
+    orchestrator = PtfOrchestrator(ptf_path, args.edi_schema, args.xml_schema)
     edi_text, xml_text = orchestrator.load_sources()
 
     # EDI parse and render
@@ -518,9 +564,15 @@ def main(argv: Optional[List[str]] = None) -> int:
     xml_parser.parse()
     xml_json = xml_parser.render_xml_json()
 
+    if out_edi is None or out_xml is None:
+        # As a last resort (no PTF and no outputs provided), write to CWD
+        cwd = os.getcwd()
+        out_edi = out_edi or os.path.join(cwd, 'edi.json')
+        out_xml = out_xml or os.path.join(cwd, 'xml.json')
+
     # Write outputs
-    write_json_file(args.out_edi, edi_json)
-    write_json_file(args.out_xml, xml_json)
+    write_json_file(out_edi, edi_json)
+    write_json_file(out_xml, xml_json)
 
     return 0
 
