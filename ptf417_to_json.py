@@ -93,12 +93,13 @@ class EdiSchemaParser:
         self.text = edi_text
         self.segment_defs: Dict[str, EdiSegmentDef] = {}
         self.composite_defs: Dict[str, EdiCompositeDef] = {}
-        self.message_824_areas: Dict[str, List[EdiAreaEntry]] = {}
+        self.message_areas: Dict[str, List[EdiAreaEntry]] = {}
+        self.message_number: Optional[str] = None
 
     def parse(self) -> None:
         self._parse_composites()
         self._parse_segments()
-        self._parse_message_824()
+        self._parse_message_any()
 
     # --- Low-level helpers ---
 
@@ -180,22 +181,21 @@ class EdiSchemaParser:
             seg.elements.sort(key=lambda e: e.position)
             self.segment_defs[name] = seg
 
-    # --- Parse the message 824 area structure ---
+    # --- Parse the message area structure for any message number ---
 
-    def _parse_message_824(self) -> None:
-        # Locate the message 824 block inside `def derivedMessage ... { def message 824 { ... } }`
-        # We find all def message <num> blocks and pick the one named 824.
-        msg_pattern = r"def\s+message\s+824\s*\{"
-        m = re.search(msg_pattern, self.text)
-        if not m:
+    def _parse_message_any(self) -> None:
+        # Locate a message block: def message <num> { ... }
+        msg_header = re.search(r"def\s+message\s+(\d+)\s*\{", self.text)
+        if not msg_header:
             return
-        start = m.end()
+        self.message_number = msg_header.group(1)
+        start = msg_header.end()
         end = self._find_matching_brace(start)
         if end == -1:
             return
         body = self.text[start:end]
 
-        # Parse areas: def area 1 { ... }, def area 2 { ... }
+        # Parse areas: def area 1 { ... }, def area 2 { ... }, etc.
         area_pattern = r"def\s+area\s+(\d+)\s*\{"
         areas: Dict[str, List[EdiAreaEntry]] = {}
         for am in re.finditer(area_pattern, body):
@@ -207,7 +207,7 @@ class EdiSchemaParser:
             abody = body[astart_rel:aend_rel]
             entries = self._parse_area_entries(abody)
             areas[area_num] = entries
-        self.message_824_areas = areas
+        self.message_areas = areas
 
     def _parse_area_entries(self, abody: str) -> List[EdiAreaEntry]:
         entries: List[EdiAreaEntry] = []
@@ -291,12 +291,12 @@ class EdiSchemaParser:
     # --- Render to JSON matching existing edi.json structure ---
 
     def render_edi_json(self) -> Dict[str, Any]:
-        # Only message 824 is needed
-        result: Dict[str, Any] = {"824": {}}
-        # Area 1 and Area 2
-        for area_num, entries in sorted(self.message_824_areas.items(), key=lambda t: int(t[0])):
+        # Render using the detected message number (e.g., '824', '417')
+        msg = self.message_number or 'MSG'
+        result: Dict[str, Any] = {msg: {}}
+        for area_num, entries in sorted(self.message_areas.items(), key=lambda t: int(t[0])):
             area_key = f"Area{area_num}"
-            result["824"][area_key] = self._render_area(entries)
+            result[msg][area_key] = self._render_area(entries)
         return result
 
     def _render_area(self, entries: List[EdiAreaEntry]) -> Dict[str, Any]:
@@ -425,6 +425,7 @@ class XmlSchemaParser:
     def render_xml_json(self) -> Dict[str, Any]:
         # Root type is LIST
         if 'LIST' not in self.types:
+            # Some PTFs might embed only the inner DSL; still expect LIST
             return {}
         root = self._instantiate_type('LIST')
         return { 'LIST': root }
