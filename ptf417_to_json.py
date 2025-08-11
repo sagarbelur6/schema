@@ -523,6 +523,157 @@ class XmlSchemaParser:
 
 
 ################################################################################
+# Branch-diagram style parsing (generic, indentation-based)
+################################################################################
+
+@dataclass
+class DiagramNode:
+    label: str
+    name: Optional[str]
+    position: Optional[str]
+    cardinality: Optional[Tuple[Optional[int], Optional[int]]]
+    children: List['DiagramNode'] = field(default_factory=list)
+
+
+class DiagramParser:
+    SECTION_PATTERNS = [
+        (re.compile(r"^\s*input\s+branch\s+diagram\b[:\-]?", re.I), 'input_branch'),
+        (re.compile(r"^\s*output\s+branch\s+diagram\b[:\-]?", re.I), 'output_branch'),
+        (re.compile(r"^\s*input\s+record\s+details\b[:\-]?", re.I), 'input_details'),
+        (re.compile(r"^\s*output\s+record\s+details\b[:\-]?", re.I), 'output_details'),
+    ]
+
+    def __init__(self, text: str) -> None:
+        self.text = text
+        self.sections: Dict[str, List[str]] = {}
+
+    def parse_sections(self) -> None:
+        current: Optional[str] = None
+        for raw_line in self.text.splitlines():
+            line = raw_line.rstrip('\n')
+            matched = False
+            for pat, key in self.SECTION_PATTERNS:
+                if pat.match(line):
+                    current = key
+                    self.sections.setdefault(current, [])
+                    matched = True
+                    break
+            if matched:
+                continue
+            if current is not None:
+                self.sections[current].append(line)
+
+    def parse_tree(self, lines: List[str]) -> Optional[DiagramNode]:
+        # Build a tree from indentation. Ignore empty/separator lines.
+        nodes_stack: List[Tuple[int, DiagramNode]] = []
+        root = DiagramNode(label='ROOT', name=None, position=None, cardinality=None)
+        nodes_stack.append((0, root))
+
+        for raw in lines:
+            if not raw.strip():
+                continue
+            # Skip obvious separators
+            if set(raw.strip()) in ({'-'}, {'='}, {'_'}, {'*'}):
+                continue
+            indent = self._leading_spaces(raw)
+            label = raw.strip()
+            node = self._make_node(label)
+
+            # Find parent by indent
+            while nodes_stack and indent < nodes_stack[-1][0]:
+                nodes_stack.pop()
+            if indent > nodes_stack[-1][0]:
+                # child of last
+                nodes_stack[-1][1].children.append(node)
+                nodes_stack.append((indent, node))
+            else:
+                # sibling of parent level
+                nodes_stack.pop()
+                nodes_stack[-1][1].children.append(node)
+                nodes_stack.append((indent, node))
+        return root if root.children else None
+
+    def parse_fields(self, lines: List[str]) -> Dict[str, Dict[str, Any]]:
+        # Generic parser for tabular field attributes.
+        fields: Dict[str, Dict[str, Any]] = {}
+        headers = None
+        for raw in lines:
+            line = raw.strip()
+            if not line:
+                continue
+            # Detect headers if a line has separators or known header words
+            if headers is None and re.search(r"\b(name|field|element)\b", line, re.I):
+                # Split headers by | or 2+ spaces
+                headers = self._smart_split(line)
+                continue
+            parts = self._smart_split(line)
+            if headers and len(parts) >= 1:
+                name = parts[0]
+                attrs: Dict[str, Any] = {}
+                for i, h in enumerate(headers[1:], start=1):
+                    if i < len(parts):
+                        attrs[h] = parts[i]
+                fields[name] = attrs
+            else:
+                # Key: value style
+                kv = self._kv_pairs(line)
+                if kv:
+                    name = kv.pop('name', kv.pop('field', kv.pop('element', None)))
+                    if name:
+                        fields[name] = kv
+        return fields
+
+    @staticmethod
+    def _leading_spaces(s: str) -> int:
+        return len(s) - len(s.lstrip(' '))
+
+    @staticmethod
+    def _make_node(label: str) -> DiagramNode:
+        # Try to extract position (4 digits), name (token), and cardinality in brackets [min..max]
+        pos_m = re.search(r"\b(\d{4})\b", label)
+        position = pos_m.group(1) if pos_m else None
+        card_m = re.search(r"\[(\d+|\*)?\.\.(\d+|\*)?\]", label)
+        cardinality: Optional[Tuple[Optional[int], Optional[int]]]
+        if card_m:
+            min_v = None if card_m.group(1) in (None, '*') else int(card_m.group(1))
+            max_v = None if card_m.group(2) in (None, '*') else int(card_m.group(2))
+            cardinality = (min_v, max_v)
+        else:
+            cardinality = None
+        # Name: last ALLCAPS token or word before bracket
+        name_m = re.findall(r"\b([A-Z0-9]{2,})\b", label)
+        name = name_m[-1] if name_m else None
+        return DiagramNode(label=label, name=name, position=position, cardinality=cardinality)
+
+    @staticmethod
+    def _smart_split(line: str) -> List[str]:
+        if '|' in line:
+            return [p.strip() for p in line.split('|') if p.strip()]
+        # collapse 2+ spaces
+        parts = re.split(r"\s{2,}", line.strip())
+        return [p for p in parts if p]
+
+    @staticmethod
+    def _kv_pairs(line: str) -> Dict[str, str]:
+        out: Dict[str, str] = {}
+        for m in re.finditer(r"([A-Za-z0-9_ ]+):\s*([^;|]+)", line):
+            k = m.group(1).strip().lower()
+            v = m.group(2).strip()
+            out[k] = v
+        return out
+
+    @staticmethod
+    def to_json(node: DiagramNode) -> Dict[str, Any]:
+        return {
+            "label": node.label,
+            **({"name": node.name} if node.name else {}),
+            **({"position": node.position} if node.position else {}),
+            **({"cardinality": {"min": node.cardinality[0], "max": node.cardinality[1]}} if node.cardinality else {}),
+            **({"children": [DiagramParser.to_json(c) for c in node.children]} if node.children else {}),
+        }
+
+
+################################################################################
 # Combined parser/orchestrator
 ################################################################################
 
@@ -540,6 +691,11 @@ class PtfOrchestrator:
         mxml = re.search(r"schemaInput\s*=\s*`([\s\S]*?)`;", ptf)
         if mxml:
             xml_part = mxml.group(1)
+        else:
+            # Try any inline backtick block
+            mxml2 = re.search(r"`([\s\S]*?)`", ptf)
+            if mxml2:
+                xml_part = mxml2.group(1)
         # Remove XML part from EDI text to avoid confusing the EDI parser
         edi_part = ptf
         if xml_part:
@@ -579,15 +735,46 @@ def main(argv: Optional[List[str]] = None) -> int:
     orchestrator = PtfOrchestrator(ptf_path)
     edi_text, xml_text = orchestrator.load_sources()
 
-    # EDI parse and render
-    edi_parser = EdiSchemaParser(edi_text)
-    edi_parser.parse()
-    edi_json = edi_parser.render_edi_json()
+    # Decide parsing mode: DSL vs Branch-diagram
+    use_diagram_mode = True
+    if re.search(r"def\s+segment\b|def\s+compositeElement\b|def\s+message\b|def\s+derivedMessage\b", edi_text):
+        use_diagram_mode = False
 
-    # XML parse and render
-    xml_parser = XmlSchemaParser(xml_text)
-    xml_parser.parse()
-    xml_json = xml_parser.render_xml_json()
+    if not use_diagram_mode:
+        # EDI parse and render from DSL
+        edi_parser = EdiSchemaParser(edi_text)
+        edi_parser.parse()
+        edi_json = edi_parser.render_edi_json()
+        # XML parse and render from DSL (if xml_text available)
+        xml_parser = XmlSchemaParser(xml_text)
+        xml_parser.parse()
+        xml_json = xml_parser.render_xml_json()
+    else:
+        # Diagram-based parsing
+        dparser = DiagramParser(edi_text)
+        dparser.parse_sections()
+        input_branch = dparser.parse_tree(dparser.sections.get('input_branch', []))
+        output_branch = dparser.parse_tree(dparser.sections.get('output_branch', []))
+        input_fields = dparser.parse_fields(dparser.sections.get('input_details', []))
+
+        # Infer message number from header lines
+        msg_num = None
+        for line in edi_text.splitlines():
+            m = re.search(r"\b(\d{3,4})\b", line)
+            if m:
+                msg_num = m.group(1)
+                break
+        msg_key = msg_num or 'MSG'
+
+        edi_json = {
+            msg_key: {
+                **({"Branch": DiagramParser.to_json(input_branch)} if input_branch else {}),
+                **({"Fields": input_fields} if input_fields else {}),
+            }
+        }
+        xml_json = {
+            **({"Branch": DiagramParser.to_json(output_branch)} if output_branch else {})
+        }
 
     if out_edi is None or out_xml is None:
         # As a last resort (no PTF and no outputs provided), write to CWD
